@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# author Steve Pousty TheSteve0
+# this is directly based on the assemble for the default python3.5 s2i builder
+# https://github.com/sclorg/s2i-python-container/blob/master/3.5/s2i/bin/assemble
+# since this is specific to spark I am removing references to Django 
+
+set -e
+
+shopt -s dotglob
+echo "---> Installing application source ..."
+mv /tmp/src/conf/* /opt/spark/conf
+mv /tmp/src/* ./
+
+
+
+if [[ -f requirements.txt ]]; then
+  echo "---> Installing dependencies ..."
+  pip install --user -r requirements.txt
+fi
+
+if [[ -f setup.py ]]; then
+  echo "---> Installing application ..."
+  python setup.py develop --user
+fi
+
+
+# Fix source directory permissions
+fix-permissions ./
+# set permissions for any installed artifacts
+fix-permissions /opt/app-root
+
+# remove pip temporary directory
+rm -rf /tmp/pip_build_default
