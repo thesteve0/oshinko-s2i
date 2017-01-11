@@ -3,7 +3,7 @@
 # author Steve Pousty TheSteve0
 # this is directly based on the assemble for the default python3.5 s2i builder
 # https://github.com/sclorg/s2i-python-container/blob/master/3.5/s2i/bin/assemble
-# since this is specific to spark I am removing references to Django 
+# since this is specific to spark I am removing references to Django
 
 set -e
 
@@ -27,6 +27,8 @@ fi
 
 # Fix source directory permissions
 fix-permissions ./
+#fix permissionson the conf directory
+fix-permissions /opt/spark/conf
 # set permissions for any installed artifacts
 fix-permissions /opt/app-root
 
